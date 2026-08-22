@@ -11,10 +11,10 @@ const socCls =
 export function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-black">
-      <div className="relative z-10 px-6 pt-16 md:px-12 md:pt-20">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+      <div className="relative z-10 px-4 xs:px-5 sm:px-6 md:px-12 pt-12 sm:pt-16 md:pt-20">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-10">
           <div data-reveal className="space-y-2">
-            <div className="font-display text-2xl font-bold tracking-tight text-bone">
+            <div className="font-display text-xl sm:text-2xl font-bold tracking-tight text-bone">
               THE AMETHYST{" "}
               <span className="font-mono text-xs font-normal text-bone/40">— VIDEO EDITING</span>
             </div>
@@ -23,12 +23,12 @@ export function Footer() {
             </p>
           </div>
 
-          <div data-reveal className="flex flex-wrap gap-8">
+          <div data-reveal className="flex flex-wrap gap-6 sm:gap-8">
             <div>
-              <h4 className="font-mono text-[10px] tracking-[0.3em] text-bone/40 uppercase mb-3">
+              <h4 className="font-mono text-[10px] tracking-[0.3em] text-bone/40 uppercase mb-2 sm:mb-3">
                 NAVIGATION
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-1 sm:space-y-2">
                 <a
                   href="https://www.instagram.com/theamethyststudios"
                   target="_blank"
@@ -44,10 +44,10 @@ export function Footer() {
             </div>
 
             <div>
-              <h4 className="font-mono text-[10px] tracking-[0.3em] text-bone/40 uppercase mb-3">
+              <h4 className="font-mono text-[10px] tracking-[0.3em] text-bone/40 uppercase mb-2 sm:mb-3">
                 SOCIALS
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-1 sm:space-y-2">
                 <a
                   href="https://twitter.com/AmethystCuts"
                   target="_blank"
@@ -73,16 +73,16 @@ export function Footer() {
         <div
           aria-hidden
           data-reveal
-          className="mt-16 text-center select-none font-display text-[11vw] sm:text-[12vw] font-black leading-none tracking-normal text-white/[0.08] uppercase border-b border-white/5 py-4 whitespace-nowrap"
+          className="mt-12 sm:mt-16 text-center select-none font-display text-[clamp(2.25rem,11vw,7.5rem)] font-black leading-none tracking-normal text-white/[0.08] uppercase border-b border-white/5 py-4 max-w-full overflow-hidden truncate"
         >
           THE AMETHYST
         </div>
 
-        <div className="relative flex flex-col-reverse items-center gap-6 py-8 md:flex-row md:justify-between">
-          <p className="font-mono text-xs text-bone/40">
+        <div className="relative flex flex-col-reverse items-center gap-5 py-6 sm:py-8 md:flex-row md:justify-between pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+          <p className="font-mono text-xs text-bone/40 text-center md:text-left">
             © 2026 THE AMETHYST. ALL RIGHTS RESERVED.
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-2.5 sm:gap-3">
             <a
               href="https://twitter.com/AmethystCuts"
               target="_blank"

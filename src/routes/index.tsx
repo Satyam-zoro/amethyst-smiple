@@ -171,7 +171,11 @@ function PortfolioPage() {
       <Footer />
 
       <ConnectModal open={connectOpen} onClose={() => setConnectOpen(false)} />
-      <Lightbox work={activeWork} onClose={() => setActiveWork(null)} />
+      <Lightbox
+        work={activeWork}
+        onClose={() => setActiveWork(null)}
+        onNavigate={setActiveWork}
+      />
     </div>
   );
 }

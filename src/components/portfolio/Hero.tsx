@@ -1,6 +1,6 @@
 export function Hero() {
   return (
-    <section className="relative px-6 pt-20 pb-2.5 md:px-12 md:pt-24 md:pb-3">
+    <section className="relative px-4 xs:px-5 sm:px-6 pt-16 pb-2.5 md:px-12 md:pt-24 md:pb-3">
       {/* Soft ambient background glow */}
       <div
         aria-hidden
@@ -11,19 +11,19 @@ export function Hero() {
         }}
       />
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-white/10 pb-3">
-        {/* Strictly One-Line Headline */}
-        <h1 className="hero-title font-display text-[clamp(1rem,2.1vw,1.65rem)] font-bold tracking-tight text-bone whitespace-nowrap overflow-hidden text-ellipsis flex items-center">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 md:gap-3 border-b border-white/10 pb-3">
+        {/* Headline - naturally wrapping on mobile, strictly single-line on desktop */}
+        <h1 className="hero-title font-display text-2xl xs:text-[26px] sm:text-3xl md:text-[clamp(1rem,2.1vw,1.65rem)] font-bold tracking-tight text-bone leading-[1.2] md:leading-normal md:whitespace-nowrap md:overflow-hidden md:text-ellipsis flex items-center">
           <span className="hero-line-mask overflow-hidden">
             <span className="hero-line block">
               Crafting <span className="font-normal italic text-bone/50">high-retention</span>{" "}
-              visual stories.
+              <span className="block sm:inline">visual stories.</span>
             </span>
           </span>
         </h1>
 
-        {/* Right Info Tag - One line */}
-        <div className="flex items-center gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-bone/40 uppercase whitespace-nowrap shrink-0">
+        {/* Right Info Tag */}
+        <div className="flex items-center gap-2 sm:gap-3 font-mono text-[9px] xs:text-[10px] sm:text-[11px] tracking-[0.18em] sm:tracking-[0.2em] text-bone/40 uppercase whitespace-nowrap shrink-0">
           <span>VIDEO EDITOR & STORY DIRECTOR</span>
           <span className="hidden lg:inline text-white/15">•</span>
           <span className="hidden lg:inline">DOCUMENTARIES • PODCASTS • SHORTS</span>

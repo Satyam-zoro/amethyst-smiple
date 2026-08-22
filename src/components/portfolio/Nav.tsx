@@ -4,7 +4,7 @@ interface NavProps {
   onConnect?: () => void;
 }
 
-export function Nav({}: NavProps) {
+export function Nav({ onConnect }: NavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
@@ -12,8 +12,8 @@ export function Nav({}: NavProps) {
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > 50);
-      setHidden(y > 120 && y > lastY.current);
+      setScrolled(y > 40);
+      setHidden(y > 110 && y > lastY.current);
       lastY.current = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -28,7 +28,7 @@ export function Nav({}: NavProps) {
       style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
     >
       <nav
-        className={`flex h-[68px] items-center justify-between px-6 transition-all duration-500 md:px-12 ${
+        className={`flex h-14 md:h-[68px] items-center justify-between px-4 xs:px-5 sm:px-6 md:px-12 transition-all duration-500 ${
           scrolled
             ? "border-b border-white/10 bg-black/85 backdrop-blur-xl"
             : "border-b border-transparent"
@@ -37,16 +37,20 @@ export function Nav({}: NavProps) {
       >
         <a
           href="#"
-          className="font-display text-base font-bold tracking-tight text-bone hover:text-white transition-colors"
+          className="font-display text-sm sm:text-base font-bold tracking-tight text-bone hover:text-white transition-colors"
           aria-label="Back to top"
         >
           PORTFOLIO
         </a>
 
-        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5">
+        <div
+          onClick={onConnect}
+          className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 cursor-pointer hover:border-white/30 transition-colors"
+        >
           <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-white" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-bone/70">
-            Available for Projects
+          <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-bone/70 whitespace-nowrap">
+            <span className="sm:hidden">AVAILABLE</span>
+            <span className="hidden sm:inline">Available for Projects</span>
           </span>
         </div>
       </nav>
