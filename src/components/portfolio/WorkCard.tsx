@@ -15,6 +15,12 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
   const cardRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  /* Touch long-press preview refs */
+  const touchTimerRef = useRef<number | null>(null);
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null);
+  const isLongPressing = useRef(false);
+  const preventClick = useRef(false);
+
   /* Lazy-load video source when card comes into viewport */
   useEffect(() => {
     const el = cardRef.current;
@@ -30,7 +36,12 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
       { rootMargin: "200px" },
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (touchTimerRef.current) {
+        clearTimeout(touchTimerRef.current);
+      }
+    };
   }, []);
 
   const handleEnter = () => {
@@ -45,6 +56,76 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
     if (!v) return;
     v.pause();
     v.currentTime = posterTime(work.src);
+  };
+
+  /* Mobile touch long-press handlers */
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (window.matchMedia("(hover: hover)").matches) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+    isLongPressing.current = false;
+    preventClick.current = false;
+
+    if (touchTimerRef.current) clearTimeout(touchTimerRef.current);
+    touchTimerRef.current = window.setTimeout(() => {
+      isLongPressing.current = true;
+      preventClick.current = true;
+      if (videoRef.current && isVisible) {
+        videoRef.current.play().catch(() => {});
+      }
+    }, 500);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (window.matchMedia("(hover: hover)").matches || !touchStartPos.current) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    const dx = Math.abs(touch.clientX - touchStartPos.current.x);
+    const dy = Math.abs(touch.clientY - touchStartPos.current.y);
+
+    // Cancel if finger moves > 10px (user is scrolling)
+    if (dx > 10 || dy > 10) {
+      if (touchTimerRef.current) {
+        clearTimeout(touchTimerRef.current);
+        touchTimerRef.current = null;
+      }
+      if (isLongPressing.current) {
+        isLongPressing.current = false;
+        if (videoRef.current) {
+          videoRef.current.pause();
+          videoRef.current.currentTime = posterTime(work.src);
+        }
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (window.matchMedia("(hover: hover)").matches) return;
+    if (touchTimerRef.current) {
+      clearTimeout(touchTimerRef.current);
+      touchTimerRef.current = null;
+    }
+    if (isLongPressing.current) {
+      isLongPressing.current = false;
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = posterTime(work.src);
+      }
+      // Briefly maintain preventClick so synthetic onClick is swallowed
+      setTimeout(() => {
+        preventClick.current = false;
+      }, 150);
+    }
+    touchStartPos.current = null;
+  };
+
+  const handleClick = () => {
+    if (preventClick.current) {
+      preventClick.current = false;
+      return;
+    }
+    onPlay(work);
   };
 
   const handleKey = (e: KeyboardEvent) => {
@@ -65,7 +146,11 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
       aria-label={`Play ${work.title} - ${work.category}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      onClick={() => onPlay(work)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+      onClick={handleClick}
       onKeyDown={handleKey}
     >
       <div className="absolute inset-0 overflow-hidden rounded-xl border border-white/10 bg-black/90 transition-all duration-500 group-hover:border-white/40 group-hover:shadow-[0_20px_50px_-20px_rgba(255,255,255,0.1)]">

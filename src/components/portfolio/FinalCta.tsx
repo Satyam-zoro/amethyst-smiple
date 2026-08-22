@@ -25,16 +25,16 @@ export function FinalCta() {
           </h2>
         </div>
 
-        {/* Right Side: Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 shrink-0 w-full sm:w-auto">
+        {/* Right Side: Action Buttons - Side-by-side horizontal pills */}
+        <div className="flex flex-row items-center gap-2.5 xs:gap-3 sm:gap-4 shrink-0 flex-wrap">
           {/* Solid Black Capsule: Instagram */}
           <a
             href="https://www.instagram.com/theamethyststudios"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-[46px] items-center justify-center gap-2.5 rounded-full bg-black px-6 sm:px-7 font-sans text-[13px] font-bold tracking-[0.03em] text-white uppercase transition-all duration-200 hover:bg-zinc-800 active:scale-[0.98] touch-manipulation"
+            className="inline-flex h-[42px] xs:h-[46px] items-center justify-center gap-2 xs:gap-2.5 rounded-full bg-black px-4 xs:px-6 sm:px-7 font-sans text-xs xs:text-[13px] font-bold tracking-[0.03em] text-white uppercase transition-all duration-200 hover:bg-zinc-800 active:scale-[0.98] touch-manipulation shadow-sm"
           >
-            <Instagram className="h-4 w-4 stroke-[1.75]" />
+            <Instagram className="h-3.5 w-3.5 xs:h-4 xs:w-4 stroke-[2]" />
             <span>INSTAGRAM</span>
           </a>
 
@@ -42,9 +42,9 @@ export function FinalCta() {
           <button
             type="button"
             onClick={() => openSmartEmail("contact@theamethyst.studio")}
-            className="inline-flex h-[46px] items-center justify-center gap-2.5 rounded-full border border-black/20 bg-transparent px-6 sm:px-7 font-sans text-[13px] font-bold tracking-[0.03em] text-zinc-950 uppercase transition-all duration-200 hover:border-black/50 hover:bg-black/[0.04] active:scale-[0.98] touch-manipulation"
+            className="inline-flex h-[42px] xs:h-[46px] items-center justify-center gap-2 xs:gap-2.5 rounded-full border border-black/25 bg-transparent px-4 xs:px-6 sm:px-7 font-sans text-xs xs:text-[13px] font-bold tracking-[0.03em] text-zinc-950 uppercase transition-all duration-200 hover:border-black/50 hover:bg-black/[0.04] active:scale-[0.98] touch-manipulation"
           >
-            <Mail className="h-4 w-4 stroke-[1.75] text-zinc-900" />
+            <Mail className="h-3.5 w-3.5 xs:h-4 xs:w-4 stroke-[2] text-zinc-900" />
             <span>SEND EMAIL</span>
           </button>
         </div>

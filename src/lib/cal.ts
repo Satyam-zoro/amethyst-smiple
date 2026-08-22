@@ -1,6 +1,4 @@
-/* Cal.com element-click embed loader + programmatic modal open.
- * Replicates the original snippet: stub → embed.js → init "15min" namespace. */
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
   interface Window {
     Cal?: any;
@@ -23,9 +21,9 @@ export function initCal(): Promise<void> {
       const d = C.document;
       C.Cal =
         C.Cal ||
-        function () {
+        function (...args: any[]) {
           const cal = C.Cal;
-          const ar = arguments;
+          const ar = args;
           if (!cal.loaded) {
             cal.ns = {};
             cal.q = cal.q || [];
@@ -33,8 +31,8 @@ export function initCal(): Promise<void> {
             cal.loaded = true;
           }
           if (ar[0] === L) {
-            const api: any = function () {
-              p(api, arguments);
+            const api: any = function (...subArgs: any[]) {
+              p(api, subArgs);
             };
             const namespace = ar[1];
             api.q = api.q || [];

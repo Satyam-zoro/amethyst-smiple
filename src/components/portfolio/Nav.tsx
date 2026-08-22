@@ -43,16 +43,18 @@ export function Nav({ onConnect }: NavProps) {
           PORTFOLIO
         </a>
 
-        <div
+        <button
+          type="button"
           onClick={onConnect}
-          className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 cursor-pointer hover:border-white/30 transition-colors"
+          aria-label="Available for projects - contact us"
+          className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 cursor-pointer hover:border-white/30 transition-colors active:scale-95 touch-manipulation"
         >
           <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-white" />
           <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-bone/70 whitespace-nowrap">
             <span className="sm:hidden">AVAILABLE</span>
             <span className="hidden sm:inline">Available for Projects</span>
           </span>
-        </div>
+        </button>
       </nav>
     </header>
   );

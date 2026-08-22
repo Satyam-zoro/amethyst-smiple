@@ -16,7 +16,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
         onComplete();
         return;
       }
-    } catch {}
+    } catch {
+      // sessionStorage might be disabled or unavailable
+    }
 
     const start = performance.now();
     const DURATION = 1000;
@@ -37,7 +39,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
             doneRef.current = true;
             try {
               sessionStorage.setItem("amethyst_has_visited", "true");
-            } catch {}
+            } catch {
+              // Ignore sessionStorage errors
+            }
             onComplete();
           }
         }, 800);
@@ -57,7 +61,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
     doneRef.current = true;
     try {
       sessionStorage.setItem("amethyst_has_visited", "true");
-    } catch {}
+    } catch {
+      // Ignore sessionStorage errors
+    }
     onComplete();
   };
 

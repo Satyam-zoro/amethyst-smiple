@@ -73,7 +73,7 @@ export function Footer() {
         <div
           aria-hidden
           data-reveal
-          className="mt-12 sm:mt-16 text-center select-none font-display text-[clamp(2.25rem,11vw,7.5rem)] font-black leading-none tracking-normal text-white/[0.08] uppercase border-b border-white/5 py-4 max-w-full overflow-hidden truncate"
+          className="mt-16 text-center select-none font-display text-[11vw] sm:text-[12vw] font-black leading-none tracking-normal text-white/[0.08] uppercase border-b border-white/5 py-4 whitespace-nowrap"
         >
           THE AMETHYST
         </div>

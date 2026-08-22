@@ -61,6 +61,8 @@ function PortfolioPage() {
   const search = useSearch({ from: "/" });
   const navigate = useNavigate({ from: "/" });
 
+  const [activePlaylist, setActivePlaylist] = useState<Work[] | undefined>(undefined);
+
   /* Resolve active work from URL search params for deep-linking */
   const activeWork = search.work ? getWorkById(search.work) || null : null;
 
@@ -73,6 +75,14 @@ function PortfolioPage() {
       });
     },
     [navigate],
+  );
+
+  const handlePlay = useCallback(
+    (work: Work, playlist?: Work[]) => {
+      if (playlist) setActivePlaylist(playlist);
+      setActiveWork(work);
+    },
+    [setActiveWork],
   );
 
   /* Lenis smooth scroll + GSAP scroll storytelling + progress bar */
@@ -163,7 +173,7 @@ function PortfolioPage() {
 
       <main>
         <Hero />
-        <WorksSection onPlay={setActiveWork} />
+        <WorksSection onPlay={handlePlay} />
         <Marquee onSelectCategory={() => scrollToWorks()} />
         <FinalCta />
       </main>
@@ -173,6 +183,7 @@ function PortfolioPage() {
       <ConnectModal open={connectOpen} onClose={() => setConnectOpen(false)} />
       <Lightbox
         work={activeWork}
+        activeList={activePlaylist}
         onClose={() => setActiveWork(null)}
         onNavigate={setActiveWork}
       />

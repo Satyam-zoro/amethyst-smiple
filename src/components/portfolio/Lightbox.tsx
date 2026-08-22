@@ -4,16 +4,21 @@ import { cleanSrc, WORKS, type Work } from "@/data/works";
 
 interface LightboxProps {
   work: Work | null;
+  activeList?: Work[];
   onClose: () => void;
   onNavigate?: (work: Work) => void;
 }
 
-export function Lightbox({ work, onClose, onNavigate }: LightboxProps) {
+export function Lightbox({ work, activeList, onClose, onNavigate }: LightboxProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const currentIndex = work ? WORKS.findIndex((w) => w.id === work.id) : -1;
-  const prevWork = currentIndex > 0 ? WORKS[currentIndex - 1] : WORKS[WORKS.length - 1];
-  const nextWork = currentIndex >= 0 && currentIndex < WORKS.length - 1 ? WORKS[currentIndex + 1] : WORKS[0];
+  const playlist = activeList && activeList.length > 0 ? activeList : WORKS;
+  const currentIndex = work ? playlist.findIndex((w) => w.id === work.id) : -1;
+  const prevWork = currentIndex > 0 ? playlist[currentIndex - 1] : playlist[playlist.length - 1];
+  const nextWork =
+    currentIndex >= 0 && currentIndex < playlist.length - 1
+      ? playlist[currentIndex + 1]
+      : playlist[0];
 
   useEffect(() => {
     if (!work) return;

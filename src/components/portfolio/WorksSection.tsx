@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useMemo } from "react";
 import gsap from "gsap";
+import { ChevronDown } from "lucide-react";
 import { spanFor, visibleWorks, type FilterId, type Work } from "@/data/works";
 import { WorkCard } from "./WorkCard";
 
@@ -10,11 +11,13 @@ const FILTERS: Array<{ id: FilterId; label: string }> = [
 ];
 
 interface WorksSectionProps {
-  onPlay: (work: Work) => void;
+  onPlay: (work: Work, playlist?: Work[]) => void;
 }
 
 export function WorksSection({ onPlay }: WorksSectionProps) {
   const [filter, setFilter] = useState<FilterId>("all");
+  const [showAllLong, setShowAllLong] = useState(false);
+  const [showAllShort, setShowAllShort] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const firstRun = useRef(true);
 
@@ -44,42 +47,68 @@ export function WorksSection({ onPlay }: WorksSectionProps) {
   const longWorks = works.filter((w) => w.format === "long");
   const shortWorks = works.filter((w) => w.format === "short");
 
+  /* Mobile-only long-form ordering: Put Why Harvard Studied Müller above Minecraft */
+  const mobileLongWorks = useMemo(() => {
+    const list = [...longWorks];
+    const harvardIdx = list.findIndex((w) => w.id === "harvard-footballer");
+    const minecraftIdx = list.findIndex((w) => w.id === "ai-minecraft-models");
+    if (harvardIdx !== -1 && minecraftIdx !== -1 && harvardIdx > minecraftIdx) {
+      const [harvardItem] = list.splice(harvardIdx, 1);
+      list.splice(minecraftIdx, 0, harvardItem);
+    }
+    return list;
+  }, [longWorks]);
+
+  const displayedLongWorks = showAllLong ? mobileLongWorks : mobileLongWorks.slice(0, 4);
+  const displayedShortWorks = showAllShort ? shortWorks : shortWorks.slice(0, 6);
+
+  /* Device-aware playlist for lightbox prev/next navigation */
+  const mobileFullPlaylist = useMemo(() => {
+    if (filter === "long") return mobileLongWorks;
+    if (filter === "short") return shortWorks;
+    return [...mobileLongWorks, ...shortWorks];
+  }, [filter, mobileLongWorks, shortWorks]);
+
   return (
     <section
       className="px-4 xs:px-5 sm:px-6 pt-2 pb-14 md:px-12 md:pt-3 md:pb-24 max-w-full overflow-hidden"
       aria-label="Portfolio"
     >
-      {/* Minimal filter bar */}
+      {/* Filter bar - single screen on phone, clean refined pill group on PC */}
       <div
         data-reveal
-        className="mb-4 sm:mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+        className="mb-4 sm:mb-5 md:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
       >
-        <div className="relative w-full sm:w-auto max-w-full overflow-hidden">
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 pr-2 sm:pr-0 touch-pan-x -mx-4 px-4 xs:-mx-5 xs:px-5 sm:mx-0 sm:px-0">
-            {FILTERS.map((f) => {
-              const count = visibleWorks(f.id).length;
-              const active = filter === f.id;
-              return (
-                <button
-                  key={f.id}
-                  type="button"
-                  onClick={() => setFilter(f.id)}
-                  aria-pressed={active}
-                  className={`min-h-[44px] shrink-0 inline-flex items-center justify-center rounded-full border px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 touch-manipulation select-none ${
-                    active
-                      ? "border-white bg-white text-black font-bold shadow-md shadow-white/10"
-                      : "border-white/15 bg-white/5 text-bone/60 hover:border-white/40 hover:text-white"
-                  }`}
-                >
-                  {f.label}{" "}
-                  <span className="ml-1 opacity-60">({String(count).padStart(2, "0")})</span>
-                </button>
-              );
-            })}
-          </div>
+        <div className="grid grid-cols-3 gap-1.5 xs:gap-2 w-full sm:w-auto sm:flex sm:items-center sm:gap-2">
+          {FILTERS.map((f) => {
+            const count = visibleWorks(f.id).length;
+            const active = filter === f.id;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => {
+                  setFilter(f.id);
+                  if (f.id !== "all") {
+                    setShowAllLong(true);
+                    setShowAllShort(true);
+                  }
+                }}
+                aria-pressed={active}
+                className={`min-h-[38px] sm:min-h-0 shrink-0 inline-flex items-center justify-center rounded-full border px-2.5 xs:px-3 sm:px-3.5 py-1 font-mono text-[10px] xs:text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 touch-manipulation select-none ${
+                  active
+                    ? "border-white bg-white text-black font-bold shadow-md"
+                    : "border-white/15 bg-white/5 text-bone/60 hover:border-white/40 hover:text-white"
+                }`}
+              >
+                <span>{f.label}</span>
+                <span className="ml-1 opacity-60">({String(count).padStart(2, "0")})</span>
+              </button>
+            );
+          })}
         </div>
 
-        <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-bone/40 shrink-0 select-none">
+        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-bone/40 shrink-0 select-none">
           INDEX — {String(works.length).padStart(2, "0")} SELECTED PROJECTS
         </span>
       </div>
@@ -92,7 +121,7 @@ export function WorksSection({ onPlay }: WorksSectionProps) {
             work={work}
             index={i}
             span={spanFor(work, filter)}
-            onPlay={onPlay}
+            onPlay={(w) => onPlay(w, works)}
           />
         ))}
       </div>
@@ -112,16 +141,29 @@ export function WorksSection({ onPlay }: WorksSectionProps) {
             </div>
 
             <div className="flex flex-col gap-3.5 xs:gap-4">
-              {longWorks.map((work, i) => (
+              {displayedLongWorks.map((work, i) => (
                 <WorkCard
                   key={work.id}
                   work={work}
                   index={i}
                   className="w-full aspect-[16/9]"
-                  onPlay={onPlay}
+                  onPlay={(w) => onPlay(w, mobileFullPlaylist)}
                 />
               ))}
             </div>
+
+            {/* "MORE LONG FORM" button on mobile */}
+            {!showAllLong && longWorks.length > 4 && (
+              <button
+                type="button"
+                onClick={() => setShowAllLong(true)}
+                className="mt-3.5 w-full min-h-[46px] rounded-xl border border-white/20 bg-white/[0.04] py-3 px-4 font-mono text-xs uppercase tracking-widest text-bone hover:border-white/40 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 touch-manipulation shadow-sm"
+              >
+                <span>MORE LONG FORM</span>
+                <span className="text-[10px] text-bone/50">({longWorks.length - 4} MORE)</span>
+                <ChevronDown className="h-4 w-4 text-bone/70" />
+              </button>
+            )}
           </section>
         )}
 
@@ -138,16 +180,29 @@ export function WorksSection({ onPlay }: WorksSectionProps) {
             </div>
 
             <div className="grid grid-cols-2 gap-2.5 xs:gap-3 max-[359px]:grid-cols-1 max-[359px]:gap-3.5">
-              {shortWorks.map((work, i) => (
+              {displayedShortWorks.map((work, i) => (
                 <WorkCard
                   key={work.id}
                   work={work}
                   index={longWorks.length + i}
                   className="w-full aspect-[9/16]"
-                  onPlay={onPlay}
+                  onPlay={(w) => onPlay(w, mobileFullPlaylist)}
                 />
               ))}
             </div>
+
+            {/* "MORE SHORT FORM" button on mobile */}
+            {!showAllShort && shortWorks.length > 6 && (
+              <button
+                type="button"
+                onClick={() => setShowAllShort(true)}
+                className="mt-3.5 w-full min-h-[46px] rounded-xl border border-white/20 bg-white/[0.04] py-3 px-4 font-mono text-xs uppercase tracking-widest text-bone hover:border-white/40 hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 touch-manipulation shadow-sm"
+              >
+                <span>MORE SHORT FORM</span>
+                <span className="text-[10px] text-bone/50">({shortWorks.length - 6} MORE)</span>
+                <ChevronDown className="h-4 w-4 text-bone/70" />
+              </button>
+            )}
           </section>
         )}
       </div>

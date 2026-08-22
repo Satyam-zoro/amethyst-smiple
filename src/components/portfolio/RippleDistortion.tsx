@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, type CSSProperties } from "react";
 import { Renderer, Program, Mesh, Geometry, Triangle, Texture, RenderTarget } from "ogl";
 import "./RippleDistortion.css";
