@@ -1,0 +1,347 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * MINIMALIST PORTFOLIO — Stark obsidian, chalk bone, hairline glass borders.
+ * High-fashion editorial minimalism for a personal video editor & storyteller.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Minimalist identity tokens */
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-bone: var(--bone);
+  --color-amethyst: var(--accent-chalk);
+  --color-amethyst-deep: var(--accent-stone);
+}
+
+@theme {
+  --font-display:
+    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+:root {
+  --radius: 0.5rem;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --ink: #0a0a0c;
+  --ink-2: #121215;
+  --ink-3: #19191d;
+  --bone: #f4f4f6;
+  --accent-chalk: #ffffff;
+  --accent-stone: #8e8e93;
+  --amethyst: #ffffff;
+  --amethyst-deep: #8e8e93;
+
+  --background: var(--ink);
+  --foreground: var(--bone);
+  --card: var(--ink-2);
+  --card-foreground: var(--bone);
+  --popover: var(--ink-2);
+  --popover-foreground: var(--bone);
+  --primary: var(--bone);
+  --primary-foreground: var(--ink);
+  --secondary: var(--ink-3);
+  --secondary-foreground: var(--bone);
+  --muted: var(--ink-3);
+  --muted-foreground: #8e8e93;
+  --accent: var(--ink-3);
+  --accent-foreground: var(--bone);
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: var(--bone);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    background-color: var(--ink);
+    scroll-behavior: auto !important;
+    scroll-snap-type: none !important;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    scroll-behavior: auto !important;
+    scroll-snap-type: none !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--bone);
+    color: var(--ink);
+  }
+
+  @media (min-width: 960px) {
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--ink);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+    }
+  }
+}
+
+/* ── Lenis smooth scroll ── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ── Film grain overlay ── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8000;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* ── Custom cursor ── */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* ── Hero line reveal ── */
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+}
+.hero-line {
+  display: block;
+  transform: translateY(115%);
+  animation: hero-line-up 1.1s var(--ease) forwards;
+  will-change: transform;
+}
+@keyframes hero-line-up {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ── Marquee ── */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@utility animate-marquee {
+  animation: marquee 36s linear infinite;
+}
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
+}
+
+/* ── Pulsing dot ── */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.7);
+  }
+}
+@utility animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ── Scroll cue line ── */
+@keyframes scroll-cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+@utility animate-scroll-cue {
+  animation: scroll-cue 2.2s var(--ease) infinite;
+}
+
+/* ── Modal / lightbox entrances ── */
+@keyframes lb-in {
+  from {
+    transform: scale(0.97) translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+@utility animate-lb-in {
+  animation: lb-in 0.4s var(--ease) both;
+}
+@keyframes overlay-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@utility animate-overlay-fade {
+  animation: overlay-fade 0.3s ease-out both;
+}
+
+/* ── Works grid + span system ── */
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 250px;
+  gap: 16px;
+  grid-auto-flow: dense;
+}
+
+.span-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.span-2x1 {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+.span-1x2 {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+.span-1x1 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+@media (hover: hover) {
+  .works-grid:hover .work-card:not(:hover) {
+    opacity: 0.4;
+    filter: grayscale(40%);
+  }
+  .work-card {
+    transition:
+      opacity 0.4s var(--ease),
+      filter 0.4s var(--ease);
+  }
+}
+
+/* GPU Hardware Acceleration for ultra-smooth 60fps/120fps performance */
+.work-card,
+.work-video,
+[data-reveal] {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.work-video {
+  object-fit: contain;
+}
+.work-card[data-format="long"] .work-video {
+  object-fit: cover;
+}
+
+@media (max-width: 1024px) {
+  .works-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .works-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .work-card {
+    width: 100%;
+    height: auto;
+  }
+  .work-card[data-format="long"] {
+    aspect-ratio: 16 / 9;
+  }
+  .work-card[data-format="short"] {
+    aspect-ratio: 9 / 16;
+    max-height: 75vh;
+  }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-line {
+    animation: none;
+    transform: none;
+  }
+  .animate-marquee {
+    animation-duration: 240s;
+  }
+  .animate-scroll-cue,
+  .animate-pulse-dot {
+    animation: none;
+  }
+}
