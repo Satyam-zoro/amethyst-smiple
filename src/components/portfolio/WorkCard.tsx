@@ -21,19 +21,21 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
   const isLongPressing = useRef(false);
   const preventClick = useRef(false);
 
-  /* Lazy-load video source when card comes into viewport */
+  /* Lazy-load video source when card comes into viewport & pause when offscreen */
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry && entry.isIntersecting) {
+        if (!entry) return;
+        if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect();
+        } else if (videoRef.current && !videoRef.current.paused) {
+          videoRef.current.pause();
         }
       },
-      { rootMargin: "200px" },
+      { rootMargin: "300px" },
     );
     observer.observe(el);
     return () => {
@@ -55,7 +57,7 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
     const v = videoRef.current;
     if (!v) return;
     v.pause();
-    v.currentTime = posterTime(work.src);
+    // Do NOT reset currentTime so rehovering resumes smoothly from where it was left
   };
 
   /* Mobile touch long-press handlers */
@@ -74,7 +76,7 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
       if (videoRef.current && isVisible) {
         videoRef.current.play().catch(() => {});
       }
-    }, 500);
+    }, 400);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -94,7 +96,7 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
         isLongPressing.current = false;
         if (videoRef.current) {
           videoRef.current.pause();
-          videoRef.current.currentTime = posterTime(work.src);
+          // Keep current playback position so re-touch resumes
         }
       }
     }
@@ -110,7 +112,7 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
       isLongPressing.current = false;
       if (videoRef.current) {
         videoRef.current.pause();
-        videoRef.current.currentTime = posterTime(work.src);
+        // Keep current playback position so re-touch resumes
       }
       // Briefly maintain preventClick so synthetic onClick is swallowed
       setTimeout(() => {
@@ -162,6 +164,9 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
           playsInline
           muted
           loop
+          disablePictureInPicture
+          // @ts-expect-error standard HTML video attribute
+          disableRemotePlayback=""
           aria-hidden="true"
         />
 
@@ -170,9 +175,9 @@ export function WorkCard({ work, index, span = "", className = "", onPlay }: Wor
           {String(index + 1).padStart(2, "0")}
         </span>
 
-        {/* Play badge - visible on mobile touch, hover-only on desktop */}
-        <span className="absolute left-1/2 top-1/2 flex h-10 w-10 sm:h-12 sm:w-12 -translate-x-1/2 -translate-y-1/2 scale-90 sm:scale-75 items-center justify-center rounded-full border border-white/30 bg-black/80 text-white opacity-85 md:opacity-0 backdrop-blur-md transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 shadow-lg">
-          <Play className="ml-0.5 h-3.5 w-3.5 sm:h-4 sm:w-4 fill-current" />
+        {/* Play badge - visible on mobile touch, 220ms fade-in/scale-up on desktop hover */}
+        <span className="pointer-events-none absolute left-1/2 top-1/2 flex h-10 w-10 md:h-11 md:w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/80 text-white backdrop-blur-md shadow-lg transition-all duration-[220ms] ease-out opacity-85 scale-90 md:opacity-0 md:scale-90 group-hover:opacity-100 group-hover:scale-100">
+          <Play className="ml-0.5 h-3.5 w-3.5 md:h-4 md:w-4 fill-current" />
         </span>
 
         {/* Caption */}

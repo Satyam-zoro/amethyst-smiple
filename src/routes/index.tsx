@@ -94,8 +94,11 @@ function PortfolioPage() {
       ScrollTrigger.config({ ignoreMobileResize: true });
 
       const lenis = new Lenis({
-        lerp: 0.12,
+        lerp: 0.1,
+        duration: 1.1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
+        touchMultiplier: 1.2,
       });
       lenisRef.current = lenis;
 
@@ -108,19 +111,19 @@ function PortfolioPage() {
 
       const raf = (time: number) => lenis.raf(time * 1000);
       gsap.ticker.add(raf);
-      gsap.ticker.lagSmoothing(0);
+      gsap.ticker.lagSmoothing(500, 33);
 
       const ctx = gsap.context(() => {
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
           gsap.fromTo(
             el,
-            { y: 36, opacity: 0 },
+            { y: 32, opacity: 0 },
             {
               y: 0,
               opacity: 1,
-              duration: 0.8,
+              duration: 0.7,
               ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 88%" },
+              scrollTrigger: { trigger: el, start: "top 90%" },
             },
           );
         });
